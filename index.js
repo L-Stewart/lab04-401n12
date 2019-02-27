@@ -1,26 +1,51 @@
 'use strict';
 
-const FS = require('fs');
-const OS = require('os');
+const fs = require('fs');
+const os = require('os');
+// buffer = new Buffer(100);
 
-// Xochil's code snippet -----------------------------------------------------------
-class Buffer {
-  // you need an intermal array to store the values you'll put in the buffer
+//--------------------------------------------------------------------------
+// This is an array for the CODE that I want written into the new file
+const loopCode = `\'use strict\';
+  const newNames = [\'Bob\', \'Hob\', \'Lob\'];
+  const logger = function(array){
+    return array.forEach(x => console.log(x));
+  };
+  logger(newNames);`;
+//--------------------------------------------------------------------------
 
-  // initialize the buffer
-  constructor(size) {
-    this.size = size; // store the initial size of the array
-    this.internal_array = new Array(size); // allocate the internal array
+//--------------------------------------------------------------------------
+// This is my function that takes my array and splits it.
+// After the array is split a BUFFER is created and the array is pushed in.
+const maBuffer = function(array){
+  const splitCode = array.split('');
+  const createdBuffer = Buffer.alloc(splitCode.length);
+  for(let i = 0; i < splitCode.length; i++){
+    // In buffer.write(first is the string, then the offset number for the placement)
+    createdBuffer.write(splitCode[i], i);
   }
+  return createdBuffer;
+};
+//--------------------------------------------------------------------------
 
-  // from copies teh contents of the inout into the internal buffer
-  from(input_array) {
-    // TODO Xochil: use a for loop to iterate over the input array and copy into the internal array;
-  }
+//--------------------------------------------------------------------------
+// This function uses nodes built in file system referencing and creates a file.
+fs.writeFile('./files/loop.js', maBuffer(loopCode), (err) => {
+  if (err) throw err;
+  console.log('I have created the file in ./files/');
+});
+//--------------------------------------------------------------------------
 
-  // returns the contents of the buffer; a.i the internal array
-  values() {
-    return this.internal_array;
-  }
-}
-// ---------------------------------------------------------------------------------
+// let nameChars = function(array){
+//   let final = [];
+//   for(let i = 0; i < array.length; i++){
+//     const newArray = [];
+//     for(let j = 0;  j< array[i].length; j++){
+//       newArray.push(array[i].charCodeAt(j));
+//     }
+//     final.push(newArray);
+//   }
+//   return final;
+// };
+//
+// nameChars(newNames);
